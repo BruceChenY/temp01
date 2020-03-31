@@ -1,9 +1,467 @@
-<html>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="referrer" content="no-referrer">
+    <meta name="referrer" content="never">
+    <script type="text/javascript" src="/static/wechat/js/jquery.min.js"></script>
+    <title>添加客服下单立减20</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+        .content{
+            width: 100%;
+            padding-bottom: 32px;
+            box-sizing: border-box;
+            background-color: #ffffff;
+            position: relative;
+        }
+        .content img{
+            max-width: 100%;
+        }
+        .code-img{
+            width: 100%;
+            text-align: center;
+        }
+        .code-img img{
+            max-width: 100%;
+        }
+        .header{
+            width: 100%;
+            height: 26px;
+            line-height: 26px;
+            position: fixed;
+            top: 0;
+            color: #01b90d;
+            box-sizing: border-box;
+            background: rgba(0,0,0,.8);
+            z-index: 10;
+            font-size: 12px;
+            padding: 0 12px;
+        }
+        .buy-list{
+            width: 100%;
+            padding-left: 4%;
+            box-sizing: border-box;
+            height: 120px;
+            position: fixed;
+            top: 40px;
+            right: 0;
+            background-color: rgba(255, 255, 255, 0);
+            z-index: 10;
+            overflow: hidden;
+        }
+        .buy-list .buy-list-wrap{
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .buy-list-wrap .buy-item{
+            display: none;
+            height: 32px;
+            padding: 10px 0;
+            position: absolute;
+        }
+        .buy-list-wrap .active-out{
+            animation: active_out .5s linear 1 normal;
+            animation-fill-mode: forwards;
+            display: block;
+        }
+        .buy-list-wrap .active-before{
+            animation: active_before .5s linear 1 normal;
+            animation-fill-mode: forwards;
+            display: block;
+        }
+        .buy-list-wrap .active{
+            animation: active .5s linear 1 normal;
+            animation-fill-mode: forwards;
+            display: block;
+        }
+        @-webkit-keyframes active_out {
+            from{
+                position: absolute;
+                top: 16px;
+                opacity: 1;
+            }
+            to{
+                opacity: 0;
+                position: absolute;
+                top: -32px;
+            }
+        }
+        @keyframes active_out {
+            from{
+                top: 16px;
+                left: 0;
+                opacity: 1;
+            }
+            to{
+                opacity: 0;
+                top: -32px;
+                left: 0;
+            }
+        }
+        @-webkit-keyframes active_before {
+            from{
+                top: 68px;
+                left: 0;
+            }
+            to{
+                top: 16px;
+                left: 0;
+            }
+        }
+        @keyframes active_before {
+            from{
+                top: 68px;
+                left: 0;
+            }
+            to{
+                top: 16px;
+                left: 0;
+            }
+        }
+        @-webkit-keyframes active {
+            from{
+                top: 68px;
+                left: -50%;
+            }
+            to{
+                top: 68px;
+                left:0;
+            }
+        }
+        @keyframes active {
+            from{
+                top: 68px;
+                left: -50%;
+            }
+            to{
+                top: 68px;
+                left:0;
+            }
+        }
+        .buy-item .buy-item-wrap{
+            height: 24px;
+            padding: 4px 5px;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.53);
+            border-radius: 16px;
+        }
+        .buy-item-wrap img{
+            width: 22px;
+            height: 22px;
+            border-radius: 12px;
+            border: 1px solid #ffffff;
+        }
+        .buy-item-wrap span{
+            height: 24px;
+            line-height: 24px;
+            display: inline-block;
+            vertical-align: top;
+            font-size: 12px;
+            margin-left: 6px;
+            margin-right: 6px;
+            color: #ffffff;
+        }
+        .header .icon{
+            margin-right: 7px;
+            float: left;
+            margin-top: 5px;
+            height: 16px;
+            width: 16px;
+            background-image: url("/static/wechat/images/security.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .header .close{
+            float: right;
+            margin-top: 7px;
+            margin-right: 10px;
+            color: #cccccc;
+            height: 12px;
+            width: 12px;
+            background-image: url("/static/wechat/images/close.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        .footer{
+            width: 100%;
+            height: 32px;
+            line-height: 32px;
+            background: #ce3426;
+            font-size: 12px;
+            color: #ffffff;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            text-align: center;
+            box-shadow: -5px -5px 10px #eee;
+            z-index: 100;
+        }
+        #minute,#second{
+            display: inline-block;
+            padding: 0 4px;
+        }
+    </style>
+</head>
 <body>
-
-<h1>我的第一个标题</h1>
-
-<p>我的第一个段落。</p>
-
+    <div class="header">
+        <span class="icon"></span>
+        <span class="text">此二维码已通过安全验证，可以放心扫码</span>
+        <span class="close"></span>
+    </div>
+    <div class="buy-list">
+        <div class="buy-list-wrap">
+                        <div class="buy-item active-out">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/dufseDTV42icCvvko13hkDibT3RoHibja1dWgCV89HdklBEdN9AaQX07k1icbSqNicRia0MLoDBthEYS1BX3ce91MWnRTbHLNhQC7LkwrsaULic2Z4/96" alt="">
+                    <span class="">禹**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item active-before">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/dhlxyROicRkTtIstKBhicpicMqrkPID7SrulyR3TXEzw3LKUtTVyicGFiaczyQiaickNLxuaPNAr3Q7AStlaEjghP8UFeuBGE4OsyK4DLHu0h6qxGs/96" alt="">
+                    <span class="">a**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item active">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/fX10MhAKKUXPOkVibVxn6g1mUSObFGo2ZfzgSHlV4xIBytD6W4NH4LCK9q0vNAGwTaTSgbK9wtosTAkcLrsOIuIGTgYnIg5f51jxDgmLU5ts/96" alt="">
+                    <span class="">早**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/UEibgzgMjrI7kqKf1TpzVVMQznEVIpSgyqYTwEYsar51ibvU0NibeESgGYH597Oea6In2MT5WBfcTqZGJZuqZRPVdqsgeIZg54jric73cNJWSyA/132" alt="">
+                    <span class="">°**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/mzLr1AUP7Y2vNiaVUWeIpcGTg6OTwJ2u6xuI7ROBTQWql6SEezZDueybs1jERk2XUZobx6Ph2ZTXbrWsy2qHuicsl12SU2AydImtRG41GCoFU/96" alt="">
+                    <span class="">E**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/VJoiacGxbibrtibNajCkjgv83yTKFwZPX9Ma4ytJgGDpoWHVkYW1Qfc1P7fWJhuGu280Ay7cAH4cdrP9TdODybZWjASm2syLTXBfvzHsUibs8ps/96" alt="">
+                    <span class="">👣**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/SPT1XyCvxeibfu9bzzJaicuxfJVib7fgt1UeKvicAMHpy7z3hhD7vPyG4CVnFiaiaOJCPK2sJddlRibib23A1EH95Qk01wElWNnxMqSQpEkIvndlsEc/96" alt="">
+                    <span class="">一**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/qC4iaxwkA7379zqvOIxx0NvSj8sKKw064COUCAic6YuicPmLibXGBJnOJEpAZdcreibZroxvF0wM2ic7pmpWSlE6dsU00BC3iahJ4vp8uqbMF3fhiaE/96" alt="">
+                    <span class="">宝**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/NmtMJRpL9GKZIRnYJ80SwyNiaV5X9UGQeCrZjwxoJUU1Z6RkkvkC27LRt88OponENt7LTYS3aFUkZaicXlslOMaE3FQGicSRn0liaOwHB0fvoM0/96" alt="">
+                    <span class="">暖**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/mWvOPZTicUA8ujgpxP5GnhmpC1Nymzy7W3Y44ndST1sJ0koX0sZfvI8crpgrxPvAY04LQjnwdGsicvm9ClyHib3OQ/132" alt="">
+                    <span class="">琳**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/sq9BiawibpUYomWwC6KlE91EJu8vSOibIH2oB0W3PmdaEkm4z7hgIc28Gvm7iciaNVpDbfaNaeKfWYAo5vgTkD89W9mJ0aQr0ibL9WkiakyQjQUbH4/96" alt="">
+                    <span class="">白**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/iaVRT2As2JMvbx82rVHbV73o2HicVnkEtTQZudEfyWxpC7DSatsiaznxWhBibxL2jMQJIGiaZ3b1fia1nibP8k7Z24mUezXBibdKwZScicqPFcxdUsvk/132" alt="">
+                    <span class="">d**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/ZYcxjUTlXDN2uNl3bfZtsNODSy97dmgsrRrMgVK8Xx9mTXAwfUx1S6ddnvwJX4w4AlXVvVia6JRSzI5aEZHprTq9nzNn5YlictyPDPaK0uKSs/96" alt="">
+                    <span class="">美**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/ttm71Qd6EdKAvTj1G7ATRJ8oKO7sdftzzAOmz7OEpp3DyEQJPicknoJMUo2zK5bibU2JdLJkCYRicUcTKCMUCdFAvLpG0HnheXF0MzzQEn5JyU/96" alt="">
+                    <span class="">周**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/vwRa2NsYfxn7zia4ibBa832R1cxGhZlV5ibHs3CX0BU7RNmbRPXggjic7adofibtNaicYK7rIWaibc9oBIT92LDAJLmDLP6PMYwzRbUNzCasWaGFaU/96" alt="">
+                    <span class="">白**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/vmGmCo6Wxw6VAmKVDSb3oyTh2iaxibvyLXWD0qnB3e77cU21PITZ4iaSyZFc8Sx2C7hazzGwHHcE4arWOoMCAibSRbUgdBmiaHaonlofD35zPjtM/96" alt="">
+                    <span class="">玻**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/59q7BNf2C81jS4YnQ3pdjNg6aScMETGYZTYVtPXSdBnR8V8VRqibEibKYQ0HNfdeRv1Yzectk9tj98vXtxWVRweAUNgSL8ZlohLJISEFFXptY/96" alt="">
+                    <span class="">薇**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/hjwPiaSF5nuVQ9gYIicjY9UqbAGIL4VAHqdkCHRdhTj5Nz670uhiaKTCiaEicSCWuObZkMq4Z80l1rqLYVUsiaVXvKhzDYOXUzEBUzTY3av8vYZYA/96" alt="">
+                    <span class="">静**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/ZEjzYibiahcMagDZpnWMYscdgOLPEnHES5zMGwUuVBNtEibEvKPolYS5hbfB3X3x69J1gOIiazqyu2oHEP0VLbqfdHtbKc0VicbJGcnlKnaEP2Is/96" alt="">
+                    <span class="">穷**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/NUH3syoovw5bLlRIKGbeA4u9UqIRxbmJsqQEdCiaorMS2LEDvicZQ2gCdP9pJN9TPJoV1x7jRiaB5zlDe5d098ueVEwtUSahwbk5TSeDiav53Fg/96" alt="">
+                    <span class="">安**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/3V0FvtstDEG6jq3OzR5N9Ciasz8dCZA5ibVpRembrWh1pXoRE2NrOdEZnqFQEf0EbMcXFlh8PODeRG9aZcDkJjOybZBjYZ5iaLsctsvpXzYcxI/96" alt="">
+                    <span class="">月**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/gKNZYTV8z6keSLmuCUWvubQXCoXddF69McTVk6p3wf40wD6H57h2MGCWENUTLv704F3LWEw7vB14RZPm45GMt28IwKWQFWTKXiaxp5Buknfc/96" alt="">
+                    <span class="">张**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/RFT2zF3NBjF1KMichLzicenKswlyTqlW1rwfWxur9IuuRM0uxHWFMtJ9OrnecQFToAkQFUF7ZKgicLicVCPWpNeZcibfljxiaXoXxFNcLEbjjBZeg/132" alt="">
+                    <span class="">露**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/xZX0v8ibmNmkgQbsgbxWJw7O33vSZfOhbXUqQqoA0dGIPRibOp861OEgBQ0SSEOibKUH7fmP2iaMIhSAiajr9PIxE3zibJrKHRlg5H2OX6ibVzH7SA/96" alt="">
+                    <span class="">欧**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/Dia0MbjfMeHnPguDucTNCH5iblicQtNQSLrICvMowck95pnAOiavPy4sbSbfiboRicKY5F9xqTYmUpEMLKtRNdd01ayVdOCjNqavBj6icBWJzHvZMg/96" alt="">
+                    <span class="">蝶**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/MVoicpE54qxTssuzWJGSlXFv8yUhs27icPgqOOhNhXjgwvr5diaib3TS60ZpLYLicZmHJa0q7AJVQKlDZ5lG8glURmQ/96" alt="">
+                    <span class="">隆**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/nCA9IFPCbOfYGHWIV2OMBous67rTnqSykMHQ2VhgRowee2yoeWP2RRU9dfOhP0MbicD5RSsr9ynprk7Kt3XqvIIXJdic2vvSgoQXTg98RicCzo/96" alt="">
+                    <span class="">ヅ**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/XpEaY83VibjQYk7BpawI3bPDgzlOAosTmacFiceveU3ibQ1iaxayU426oKpFpQBobs0PMTibYVMfMRvFox6JMiaPuggwg1XdMIOor2pVZzwP4Ruiag/96" alt="">
+                    <span class="">A**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/ver_1/UoUQDSibR7tUjL1I1cK5mRSp3zibFKLRlWYVxJ8d6T2MvNCibibSQQSJvhhTaJib0RRz6mHdAYKKia1GKgtkWbKvyoZZxJtb0jFyj8AXlhNs0E3d0/96" alt="">
+                    <span class="">经**&nbsp;&nbsp;已通过咨询成功下单</span>
+                </div>
+            </div>
+                        <div class="buy-item ">
+                <div class="buy-item-wrap">
+                    <img src="http://wx.qlogo.cn/mmhead/PiajxSqBRaEIDGq75y3WlOBgKpgs2HyOV8iatcMsxgw5gHIWMEOSJUeQ/96" alt="">
+                    <span class="">S**&nbsp;&nbsp;已扫描二维码咨询</span>
+                </div>
+            </div>
+                    </div>
+    </div>
+    <div class="content">
+        <div class="detail"><p><span style="color: rgb(255, 0, 0);"><br/></span></p><p><span style="color: rgb(255, 0, 0);"><br/></span></p><p style="text-align: center;"><span style="color: rgb(255, 0, 0); font-size: 18px;">↓↓↓长按下方二维码识别添加即可购买↓↓↓</span></p><p><p class="code-img"><img src="http://ys-chat-t1.oss-cn-hangzhou.aliyuncs.com/uploads/image/wechat/202003/23/1584930519_58335.jpg" alt=""></p><br/></p></div>
+    </div>
+    <div class="footer">
+        <p>优惠剩余时间：<span id="minute"></span>分<span id="second"></span>秒</p>
+    </div>
 </body>
+<script type="text/javascript">
+    var second = 0;
+    $(function(){
+       $(".close").click(function () {
+           $(".header").hide();
+       });
+
+       // 定时数据
+       setInterval(function () {
+           // 列表渲染
+           let active_obj =  $(".active");
+           let before_obj = $(".active-before");
+           let out_obj =  $(".active-out");
+           let i_obj = $(".active + .buy-item");
+           if (i_obj.length === 0){
+               $(".buy-item:first-child").addClass('active');
+           } else{
+               i_obj.addClass('active');
+           }
+           active_obj.removeClass('active').addClass('active-before');
+           before_obj.removeClass('active-before').addClass('active-out');
+           out_obj.removeClass('active-out');
+       },2000);
+
+       // 倒计时
+        setInterval(function () {
+            show_time(false);
+        },1000);
+
+        show_time(true);
+    });
+
+    // 倒计时
+    function show_time(init) {
+        if (init === true){
+            second = randNum(300,480);
+        }
+        if (second>=0){
+            let minute_str = '0'+Math.floor(second/60);
+            let second_str = second%60;
+            if (second_str<10){
+                second_str = '0'+second_str;
+            }
+            $("#minute").text(minute_str);
+            $("#second").text(second_str);
+            second--;
+        }
+    }
+
+    // 生成随机数据
+    function randNum(min,max) {
+        return min+Math.round(Math.random()*(max-min));
+    }
+</script>
 </html>
